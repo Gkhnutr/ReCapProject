@@ -18,6 +18,23 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
+        public void Add(Car car)
+        {
+            if (car.CarName.Length > 2 && car.DailyPrice > 0)
+            {
+                _carDal.Add(car);
+            }
+            else
+            {
+                Console.WriteLine("Araba ismi 2 karakterden büyük olmalı ve günlük kiralama ücreti 0'dan büyük olmalıdır.");
+            }
+        }
+
+        public void Delete(Car car)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Car> GetAll()
         {
             return _carDal.GetAll();
@@ -33,6 +50,9 @@ namespace Business.Concrete
             return _carDal.GetAll(p => p.ColorId == id);
         }
 
-
+        public void Update(Car car)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
