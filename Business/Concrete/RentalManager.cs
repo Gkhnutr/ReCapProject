@@ -1,9 +1,15 @@
 ﻿using Business.Abstract;
-using Core.Utilities;
+using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,11 +19,15 @@ namespace Business.Concrete
     public class RentalManager : IRentalService
     {
         IRentalDal _rentalDal;
+
+        [ValidationAspect(typeof(RentalValidator))]
         public IResult Add(Rental rental)
-        {
-            if (rental.ReturnDate == null && _rentalDal.GetAll(r => r.CarId == rental.CarId).Count > 0)
+        {            
+            IResult result = BusinessRules.Run(CheckIfCarReturned(rental.CarId));
+
+            if (result != null)
             {
-                return new ErrorResult();
+                return result;
             }
             _rentalDal.Add(rental);
             return new SuccessResult();
@@ -42,6 +52,20 @@ namespace Business.Concrete
         public IResult Update(Rental rental)
         {
             _rentalDal.Update(rental);
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfCarReturned(int carId)
+        {
+            var result = _rentalDal.GetAll(r => r.CarId == carId);
+
+            foreach (var item in result)
+            {
+                if (item.ReturnDate == null)
+                {
+                    return new ErrorResult(Messages.TheCarIsNotReturned);
+                }
+            }
             return new SuccessResult();
         }
     }

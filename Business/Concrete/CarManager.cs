@@ -1,5 +1,9 @@
 ﻿using Business.Abstract;
-using Core.Utilities;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -19,17 +23,18 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
+        [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
-            if (car.CarName.Length > 2 && car.DailyPrice > 0)
+            IResult result = BusinessRules.Run();
+
+            if (result != null)
             {
-                _carDal.Add(car);
-                return new SuccessResult();
+                return result;
             }
-            else
-            {
-                return new ErrorResult("Araba ismi 2 karakterden büyük olmalı ve günlük kiralama ücreti 0'dan büyük olmalıdır.");
-            }
+
+            _carDal.Add(car);
+            return new SuccessResult();
         }
 
         public IResult Delete(Car car)

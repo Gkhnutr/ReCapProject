@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Utilities
+namespace Business.Constants
 {
-    public interface IDataResult<T> : IResult
+    public class Messages
     {
-        T Data { get; }
+        public static string TheCarIsNotReturned = "Araç teslim edilmemiş.";
     }
 }
