@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
@@ -24,6 +25,7 @@ namespace Business.Concrete
             _colorDal = colorDal;
         }
 
+        //[SecuredOperation("color.add,admin")]
         [ValidationAspect(typeof(ColorValidator))]
         public IResult Add(Color color)
         {
@@ -51,7 +53,7 @@ namespace Business.Concrete
 
         public IDataResult<Color> GetColorByColorId(int colorId)
         {            
-            return new SuccessDataResult<Color>(_colorDal.Get(c => c.ColorId == colorId));
+            return new SuccessDataResult<Color>(_colorDal.Get(c => c.Id == colorId));
         }
 
         public IResult Update(Color color)

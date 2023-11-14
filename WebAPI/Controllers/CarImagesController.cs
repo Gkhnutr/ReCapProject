@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
         [HttpPost("delete")]
         public IActionResult Delete(CarImage carImage)
         {
-            var carImageToDelete = _carImageService.GetCarImageByImageId(carImage.CarImageId).Data;
+            var carImageToDelete = _carImageService.GetCarImageByImageId(carImage.Id).Data;
             var result = _carImageService.Delete(carImageToDelete);
             if (result.Success)
             {

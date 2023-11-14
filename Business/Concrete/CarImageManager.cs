@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Core.Utilities.Business;
 using Core.Utilities.Helpers.FileHelper;
@@ -25,6 +26,7 @@ namespace Business.Concrete
             _fileHelper = fileHelper;
         }
 
+        //[SecuredOperation("carImage.add,admin")]
         public IResult Add(IFormFile file, CarImage carImage)
         {
             IResult result = BusinessRules.Run(CheckCarImageLimit(carImage.CarId));
@@ -59,7 +61,7 @@ namespace Business.Concrete
 
         public IDataResult<CarImage> GetCarImageByImageId(int imageId)
         {
-            return new SuccessDataResult<CarImage>(_carImageDal.Get(c => c.CarImageId == imageId));
+            return new SuccessDataResult<CarImage>(_carImageDal.Get(c => c.Id == imageId));
         }
 
         public IDataResult<List<CarImage>> GetCarImagesByCarId(int carId)
